@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mind Silence</string>
+    <string name="splash_icon_content_description">Mind Silence</string>
+    <string name="level_label">Уровень</string>
+    <string name="start">Старт</string>
+    <string name="thought">Мысль</string>
+    <string name="level_progress">%1$d / %2$d с</string>
+    <string name="level_idle">—</string>
+    <string name="start_content_description">Начать сессию</string>
+    <string name="thought_content_description">Зафиксировать мысль и сбросить уровень</string>
+    <string name="session_summary_title">Сессия завершена</string>
+    <string name="session_level_reached">Достигнутый уровень: %1$d</string>
+    <string name="session_best_today">Лучший сегодня: %1$d</string>
+    <string name="session_attempt_duration">Время в попытке: %1$d мин %2$d с</string>
+    <string name="ok">ОК</string>
+    <string name="highscore">Highscore</string>
+    <string name="high_scores_title">Highscore</string>
+    <string name="back">Назад</string>
+    <string name="high_scores_empty">Пока нет записей</string>
+    <string name="daily_attempts">Попыток: %1$d</string>
+    <string name="daily_total_time">Суммарно: %1$d мин %2$d с</string>
+    <string name="daily_best_level">Лучший уровень: %1$d</string>
+    <string name="menu_training">Mind Silence Training</string>
+    <string name="menu_how_to_train_cd">Как тренироваться</string>
+    <string name="how_to_train_title">Как тренироваться</string>
+    <string name="how_to_train_body">Сядьте удобно и нажмите «Старт».\n\nСледите за умом. Пока в голове тишина — ничего не делайте. Уровень растёт сам: каждый следующий длится вдвое дольше.\n\nКак только появилась мысль — нажмите «Мысль». Сессия завершится, и вы увидите достигнутый уровень.\n\nЦель — оставаться в тишине как можно дольше.</string>
+</resources>

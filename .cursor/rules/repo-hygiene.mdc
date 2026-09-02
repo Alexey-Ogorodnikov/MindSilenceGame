@@ -1,0 +1,36 @@
+---
+description: Commit only files required to build and run the app. Never add generated, local, or AI-skill files.
+alwaysApply: true
+---
+
+# Repo hygiene
+
+Commit only what is required to clone, build, and run the app.
+
+## Allowlist
+
+- `app/src/` (main, test, androidTest)
+- Gradle: `settings.gradle.kts`, `build.gradle.kts`, `app/build.gradle.kts`, `gradle.properties`, `gradle/libs.versions.toml`, `app/proguard-rules.pro`
+- Wrapper: `gradlew`, `gradlew.bat`, `gradle/wrapper/`
+- `.gitignore`, `.gitattributes`, `.cursor/rules/`
+
+## Never commit
+
+- `build/`, `.gradle/`, `.idea/`, `local.properties`
+- `.cursor/skills/`, `.cursor/mcp.json`
+- `*.apk`, `*.aab`, `*.jks`, `*.keystore`
+- Loose files at repo root (`/*.png`, sketches, dumps)
+
+## Agent duties
+
+- Do not create files outside the allowlist unless the user explicitly asks (README, docs, samples, extra configs).
+- Do not use `git add .` / `git add -A`. Add paths from the allowlist only.
+- Before every commit, inspect `git status`. The index must contain only allowlisted files.
+
+```text
+# BAD
+git add -A
+
+# GOOD
+git add app/src app/build.gradle.kts gradle .gitignore .cursor/rules
+```

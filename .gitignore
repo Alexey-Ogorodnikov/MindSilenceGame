@@ -1,0 +1,30 @@
+# Build
+.gradle/
+**/build/
+captures/
+.cxx/
+.externalNativeBuild/
+
+# Local / secrets
+local.properties
+*.jks
+*.keystore
+
+# Artifacts
+*.apk
+*.aab
+*.ap_
+output.json
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Cursor local-only (keep .cursor/rules/)
+.cursor/skills/
+.cursor/mcp.json
+
+# Loose design assets at repo root (app uses copies under app/src/main/res/)
+/*.png

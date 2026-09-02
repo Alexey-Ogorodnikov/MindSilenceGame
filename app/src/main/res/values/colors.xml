@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="calm_blue">#FF4A6FA5</color>
+    <color name="calm_green">#FF5B8A72</color>
+    <color name="calm_background_dark">#FF121820</color>
+    <color name="ic_launcher_background">#FFFFFFFF</color>
+    <color name="splash_background">#FFFFFFFF</color>
+    <color name="calm_surface_dark">#FF1A2330</color>
+</resources>
