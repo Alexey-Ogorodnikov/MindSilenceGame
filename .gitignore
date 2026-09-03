@@ -22,9 +22,10 @@ output.json
 .DS_Store
 Thumbs.db
 
-# Cursor local-only (keep .cursor/rules/)
+# Cursor local-only
 .cursor/skills/
 .cursor/mcp.json
+.cursor/rules/repo-hygiene.mdc
 
 # Loose design assets at repo root (app uses copies under app/src/main/res/)
 /*.png

@@ -19,12 +19,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mindsilence.game.R
 import com.mindsilence.game.feature.game.DailyStats
 import com.mindsilence.game.feature.game.GameProgressRepository
+import com.mindsilence.game.ui.theme.MindSilenceTheme
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -53,7 +56,7 @@ fun HighScoresScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru"))
+    val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -140,5 +143,42 @@ private fun DailyStatsCard(
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
+    }
+}
+
+@Preview(name = "High scores — Empty", showBackground = true, showSystemUi = true)
+@Composable
+private fun HighScoresScreenEmptyPreview() {
+    MindSilenceTheme {
+        HighScoresScreen(
+            state = HighScoresUiState(),
+            onBack = {},
+        )
+    }
+}
+
+@Preview(name = "High scores", showBackground = true, showSystemUi = true)
+@Composable
+private fun HighScoresScreenPreview() {
+    MindSilenceTheme {
+        HighScoresScreen(
+            state = HighScoresUiState(
+                dailyStats = listOf(
+                    DailyStats(
+                        date = LocalDate.of(2026, 9, 2),
+                        attempts = 3,
+                        totalSeconds = 185,
+                        bestLevel = 5,
+                    ),
+                    DailyStats(
+                        date = LocalDate.of(2026, 9, 1),
+                        attempts = 1,
+                        totalSeconds = 45,
+                        bestLevel = 3,
+                    ),
+                ),
+            ),
+            onBack = {},
+        )
     }
 }

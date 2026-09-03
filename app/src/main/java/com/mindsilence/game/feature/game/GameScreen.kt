@@ -29,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
@@ -37,11 +38,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
@@ -53,6 +56,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mindsilence.game.R
+import com.mindsilence.game.ui.theme.MindSilenceTheme
 
 @Composable
 fun GameRoute(
@@ -154,23 +158,12 @@ fun GameScreen(
                     },
                 )
 
-                if (state.phase == GamePhase.Running) {
-                    LinearProgressIndicator(
-                        progress = { state.progressFraction },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                    )
-                    Text(
-                        text = stringResource(
-                            R.string.level_progress,
-                            state.elapsedSecAtLevel,
-                            state.requiredSecAtLevel,
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                    )
-                }
+                LevelProgress(
+                    progressFraction = state.progressFraction,
+                    elapsedSecAtLevel = state.elapsedSecAtLevel,
+                    requiredSecAtLevel = state.requiredSecAtLevel,
+                    visible = state.phase == GamePhase.Running,
+                )
             }
 
             Row(
@@ -211,6 +204,40 @@ fun GameScreen(
             summary = summary,
             onDismiss = onDismissSessionSummary,
             onOpenHighScores = onOpenHighScores,
+        )
+    }
+}
+
+@Composable
+private fun LevelProgress(
+    progressFraction: Float,
+    elapsedSecAtLevel: Int,
+    requiredSecAtLevel: Int,
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .alpha(if (visible) 1f else 0f)
+            .then(if (visible) Modifier else Modifier.clearAndSetSemantics { }),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        LinearProgressIndicator(
+            progress = { if (visible) progressFraction else 0f },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+        )
+        Text(
+            text = stringResource(
+                R.string.level_progress,
+                elapsedSecAtLevel,
+                requiredSecAtLevel,
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
         )
     }
 }
@@ -333,3 +360,55 @@ private val FocusRingSize = 480.dp
 /** Visual center of the neon ring in `circle.png` (pixel centroid / image size). */
 private const val RingCenterXFraction = 625.35f / 1254f
 private const val RingCenterYFraction = 614.37f / 1254f
+
+@Preview(name = "Game — Idle", showBackground = true, showSystemUi = true)
+@Composable
+private fun GameScreenIdlePreview() {
+    MindSilenceTheme {
+        GameScreen(
+            state = GameUiState(),
+            onStartClick = {},
+            onThoughtClick = {},
+            onDismissSessionSummary = {},
+            onOpenHighScores = {},
+        )
+    }
+}
+
+@Preview(name = "Game — Running", showBackground = true, showSystemUi = true)
+@Composable
+private fun GameScreenRunningPreview() {
+    MindSilenceTheme {
+        GameScreen(
+            state = GameUiState(
+                phase = GamePhase.Running,
+                level = 3,
+                elapsedSecAtLevel = 2,
+            ),
+            onStartClick = {},
+            onThoughtClick = {},
+            onDismissSessionSummary = {},
+            onOpenHighScores = {},
+        )
+    }
+}
+
+@Preview(name = "Game — Session summary", showBackground = true, showSystemUi = true)
+@Composable
+private fun GameScreenSessionSummaryPreview() {
+    MindSilenceTheme {
+        GameScreen(
+            state = GameUiState(
+                sessionSummary = SessionSummary(
+                    levelReached = 4,
+                    bestToday = 5,
+                    totalSeconds = 90,
+                ),
+            ),
+            onStartClick = {},
+            onThoughtClick = {},
+            onDismissSessionSummary = {},
+            onOpenHighScores = {},
+        )
+    }
+}
