@@ -27,19 +27,19 @@ class GameViewModelTest {
         assertEquals(GamePhase.Running, state.phase)
         assertEquals(1, state.level)
         assertEquals(0, state.elapsedSecAtLevel)
-        assertEquals(1, state.requiredSecAtLevel)
+        assertEquals(4, state.requiredSecAtLevel)
 
         viewModel.onEvent(GameUiEvent.Thought)
         runCurrent()
     }
 
     @Test
-    fun `one second of silence advances to level two`() = runTest {
+    fun `four seconds of silence advances to level two`() = runTest {
         val viewModel = GameViewModel()
         viewModel.onEvent(GameUiEvent.Start)
         runCurrent()
 
-        advanceTimeBy(1_000)
+        advanceTimeBy(4_000)
         runCurrent()
 
         assertEquals(2, viewModel.state.value.level)
@@ -50,14 +50,14 @@ class GameViewModelTest {
     }
 
     @Test
-    fun `two seconds on level two advances to level three`() = runTest {
+    fun `eight seconds on level two advances to level three`() = runTest {
         val viewModel = GameViewModel()
         viewModel.onEvent(GameUiEvent.Start)
         runCurrent()
 
-        advanceTimeBy(1_000)
+        advanceTimeBy(4_000)
         runCurrent()
-        advanceTimeBy(2_000)
+        advanceTimeBy(8_000)
         runCurrent()
 
         assertEquals(3, viewModel.state.value.level)
@@ -91,7 +91,7 @@ class GameViewModelTest {
 
         viewModel.onEvent(GameUiEvent.Start)
         runCurrent()
-        advanceTimeBy(1_000)
+        advanceTimeBy(4_000)
         runCurrent()
         viewModel.onEvent(GameUiEvent.Thought)
         runCurrent()
@@ -155,9 +155,9 @@ class GameViewModelTest {
     @Test
     fun `totalSessionSeconds sums completed levels and current progress`() {
         assertEquals(0, totalSessionSeconds(level = 1, elapsedSecAtLevel = 0))
-        assertEquals(1, totalSessionSeconds(level = 2, elapsedSecAtLevel = 0))
-        assertEquals(3, totalSessionSeconds(level = 3, elapsedSecAtLevel = 0))
-        assertEquals(4, totalSessionSeconds(level = 3, elapsedSecAtLevel = 1))
+        assertEquals(4, totalSessionSeconds(level = 2, elapsedSecAtLevel = 0))
+        assertEquals(12, totalSessionSeconds(level = 3, elapsedSecAtLevel = 0))
+        assertEquals(13, totalSessionSeconds(level = 3, elapsedSecAtLevel = 1))
     }
 
     @Test
@@ -166,16 +166,16 @@ class GameViewModelTest {
         viewModel.onEvent(GameUiEvent.Start)
         runCurrent()
 
-        advanceTimeBy(1_000)
+        advanceTimeBy(4_000)
         runCurrent()
-        advanceTimeBy(2_000)
+        advanceTimeBy(8_000)
         runCurrent()
 
         viewModel.onEvent(GameUiEvent.Thought)
         runCurrent()
 
         assertEquals(
-            SessionSummary(levelReached = 3, bestToday = 3, totalSeconds = 3),
+            SessionSummary(levelReached = 3, bestToday = 3, totalSeconds = 12),
             viewModel.state.value.sessionSummary,
         )
     }
@@ -183,10 +183,10 @@ class GameViewModelTest {
     @Test
     fun `durationForLevel returns geometric progression`() {
         assertEquals(0, durationForLevel(0))
-        assertEquals(1, durationForLevel(1))
-        assertEquals(2, durationForLevel(2))
-        assertEquals(4, durationForLevel(3))
-        assertEquals(8, durationForLevel(4))
-        assertEquals(16, durationForLevel(5))
+        assertEquals(4, durationForLevel(1))
+        assertEquals(8, durationForLevel(2))
+        assertEquals(16, durationForLevel(3))
+        assertEquals(32, durationForLevel(4))
+        assertEquals(64, durationForLevel(5))
     }
 }
