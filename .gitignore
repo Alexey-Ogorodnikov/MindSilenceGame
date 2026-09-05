@@ -27,6 +27,7 @@ Thumbs.db
 .cursor/skills/
 .cursor/mcp.json
 .cursor/rules/repo-hygiene.mdc
+.cursor/rules/handbook.mdc
 
-# Loose design assets at repo root (app uses copies under app/src/main/res/)
+# Loose design assets at repo root (app uses copies under android_kotlin_app/app/src/main/res/)
 /*.png
