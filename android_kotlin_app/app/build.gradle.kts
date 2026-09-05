@@ -1,9 +1,12 @@
 import java.util.Properties
+import kotlinx.kover.gradle.plugin.dsl.AggregationType
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -67,6 +70,13 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -87,6 +97,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.androidx.lifecycle.runtime.testing)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -94,4 +106,53 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+kover {
+    reports {
+        filters {
+            includes {
+                classes(
+                    "com.mindsilence.game.feature.game.GameViewModel",
+                    "com.mindsilence.game.feature.game.GameViewModelFactory",
+                    "com.mindsilence.game.feature.game.GameUiState",
+                    "com.mindsilence.game.feature.game.GamePhase",
+                    "com.mindsilence.game.feature.game.SessionSummary",
+                    "com.mindsilence.game.feature.game.GameUiEvent*",
+                    "com.mindsilence.game.feature.game.GameUiEffect*",
+                    "com.mindsilence.game.feature.game.DailyStats",
+                    "com.mindsilence.game.feature.game.LevelDurationKt",
+                    "com.mindsilence.game.feature.game.GameProgressRepository",
+                    "com.mindsilence.game.feature.game.SharedPreferencesGameProgressRepository",
+                    "com.mindsilence.game.feature.game.InMemoryGameProgressRepository",
+                    "com.mindsilence.game.feature.splash.SplashViewModel",
+                    "com.mindsilence.game.feature.splash.SplashViewModelFactory",
+                    "com.mindsilence.game.feature.splash.SplashUiState",
+                    "com.mindsilence.game.feature.splash.SplashUiEvent*",
+                    "com.mindsilence.game.feature.splash.SplashDefaults",
+                    "com.mindsilence.game.feature.menu.MenuViewModel",
+                    "com.mindsilence.game.feature.menu.MenuUiState",
+                    "com.mindsilence.game.feature.menu.MenuUiEvent*",
+                    "com.mindsilence.game.feature.menu.MenuUiEffect*",
+                    "com.mindsilence.game.feature.highscores.HighScoresViewModel",
+                    "com.mindsilence.game.feature.highscores.HighScoresViewModelFactory",
+                    "com.mindsilence.game.feature.highscores.HighScoresUiState",
+                    "com.mindsilence.game.feature.highscores.HighScoresUiEvent*",
+                    "com.mindsilence.game.feature.highscores.HighScoresUiEffect*",
+                    "com.mindsilence.game.navigation.AppViewModel",
+                    "com.mindsilence.game.navigation.AppUiState",
+                    "com.mindsilence.game.navigation.AppUiEvent*",
+                )
+            }
+        }
+        verify {
+            rule {
+                bound {
+                    aggregationForGroup = AggregationType.COVERED_PERCENTAGE
+                    coverageUnits = CoverageUnit.LINE
+                    minValue = 100
+                }
+            }
+        }
+    }
 }

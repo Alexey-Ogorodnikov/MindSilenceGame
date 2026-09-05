@@ -1,6 +1,8 @@
 package com.mindsilence.game.feature.game
 
 import app.cash.turbine.test
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -121,6 +123,39 @@ class GameViewModelTest {
     }
 
     @Test
+    fun `open high scores dismisses summary and navigates`() = runTest {
+        val viewModel = GameViewModel()
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+        viewModel.onEvent(GameUiEvent.Thought)
+        runCurrent()
+
+        viewModel.effects.test {
+            skipItems(3)
+
+            viewModel.onEvent(GameUiEvent.OpenHighScores)
+            runCurrent()
+
+            assertEquals(null, viewModel.state.value.sessionSummary)
+            assertEquals(GameUiEffect.NavigateToHighScores, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `leave training emits navigate back to menu`() = runTest {
+        val viewModel = GameViewModel()
+
+        viewModel.effects.test {
+            viewModel.onEvent(GameUiEvent.LeaveTraining)
+            runCurrent()
+
+            assertEquals(GameUiEffect.NavigateBackToMenu, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `thought in idle is no-op`() = runTest {
         val viewModel = GameViewModel()
 
@@ -154,6 +189,7 @@ class GameViewModelTest {
 
     @Test
     fun `totalSessionSeconds sums completed levels and current progress`() {
+        assertEquals(0, totalSessionSeconds(level = 0, elapsedSecAtLevel = 5))
         assertEquals(0, totalSessionSeconds(level = 1, elapsedSecAtLevel = 0))
         assertEquals(4, totalSessionSeconds(level = 2, elapsedSecAtLevel = 0))
         assertEquals(12, totalSessionSeconds(level = 3, elapsedSecAtLevel = 0))
@@ -183,10 +219,173 @@ class GameViewModelTest {
     @Test
     fun `durationForLevel returns geometric progression`() {
         assertEquals(0, durationForLevel(0))
+        assertEquals(0, durationForLevel(-1))
         assertEquals(4, durationForLevel(1))
         assertEquals(8, durationForLevel(2))
         assertEquals(16, durationForLevel(3))
         assertEquals(32, durationForLevel(4))
         assertEquals(64, durationForLevel(5))
+    }
+
+    @Test
+    fun `start while running is no-op`() = runTest {
+        val viewModel = GameViewModel()
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+        advanceTimeBy(2_000)
+        runCurrent()
+
+        val elapsed = viewModel.state.value.elapsedSecAtLevel
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+
+        assertEquals(GamePhase.Running, viewModel.state.value.phase)
+        assertEquals(1, viewModel.state.value.level)
+        assertEquals(elapsed, viewModel.state.value.elapsedSecAtLevel)
+
+        viewModel.onEvent(GameUiEvent.Thought)
+        runCurrent()
+    }
+
+    @Test
+    fun `start emits keep screen on`() = runTest {
+        val viewModel = GameViewModel()
+
+        viewModel.effects.test {
+            viewModel.onEvent(GameUiEvent.Start)
+            runCurrent()
+
+            assertEquals(GameUiEffect.KeepScreenOn(enabled = true), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        viewModel.onEvent(GameUiEvent.Thought)
+        runCurrent()
+    }
+
+    @Test
+    fun `background while idle is no-op`() = runTest {
+        val viewModel = GameViewModel()
+        val before = viewModel.state.value
+
+        viewModel.onEvent(GameUiEvent.AppBackgrounded)
+        runCurrent()
+
+        assertEquals(before, viewModel.state.value)
+    }
+
+    @Test
+    fun `background while running pauses tick and keeps phase`() = runTest {
+        val viewModel = GameViewModel()
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+
+        viewModel.effects.test {
+            skipItems(1)
+
+            viewModel.onEvent(GameUiEvent.AppBackgrounded)
+            runCurrent()
+
+            assertEquals(GameUiEffect.KeepScreenOn(enabled = false), awaitItem())
+            assertEquals(GamePhase.Running, viewModel.state.value.phase)
+            val elapsed = viewModel.state.value.elapsedSecAtLevel
+            advanceTimeBy(4_000)
+            runCurrent()
+            assertEquals(elapsed, viewModel.state.value.elapsedSecAtLevel)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        viewModel.onEvent(GameUiEvent.Thought)
+        runCurrent()
+    }
+
+    @Test
+    fun `foreground resumes tick only after running background`() = runTest {
+        val viewModel = GameViewModel()
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+
+        viewModel.effects.test {
+            skipItems(1)
+            viewModel.onEvent(GameUiEvent.AppBackgrounded)
+            runCurrent()
+            skipItems(1)
+
+            viewModel.onEvent(GameUiEvent.AppForegrounded)
+            runCurrent()
+
+            assertEquals(GameUiEffect.KeepScreenOn(enabled = true), awaitItem())
+            advanceTimeBy(4_000)
+            runCurrent()
+            assertEquals(2, viewModel.state.value.level)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        viewModel.onEvent(GameUiEvent.Thought)
+        runCurrent()
+    }
+
+    @Test
+    fun `foreground without background does not reset running session`() = runTest {
+        val viewModel = GameViewModel()
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+
+        viewModel.onEvent(GameUiEvent.AppForegrounded)
+        runCurrent()
+        advanceTimeBy(4_000)
+        runCurrent()
+
+        assertEquals(GamePhase.Running, viewModel.state.value.phase)
+        assertEquals(2, viewModel.state.value.level)
+
+        viewModel.onEvent(GameUiEvent.Thought)
+        runCurrent()
+    }
+
+    @Test
+    fun `idle progress fraction is zero`() {
+        val idle = GameUiState()
+        assertEquals(0, idle.requiredSecAtLevel)
+        assertEquals(0f, idle.progressFraction, 0.0001f)
+    }
+
+    @Test
+    fun `running progress fraction is elapsed over required`() {
+        val running = GameUiState(
+            phase = GamePhase.Running,
+            level = 1,
+            elapsedSecAtLevel = 2,
+        )
+        assertEquals(4, running.requiredSecAtLevel)
+        assertEquals(0.5f, running.progressFraction, 0.0001f)
+    }
+
+    @Test
+    fun `progress fraction is coerced to one`() {
+        val overflowing = GameUiState(
+            phase = GamePhase.Running,
+            level = 1,
+            elapsedSecAtLevel = 100,
+        )
+        assertEquals(1f, overflowing.progressFraction, 0.0001f)
+    }
+
+    @Test
+    fun `onCleared stops ticking`() = runTest {
+        val store = ViewModelStore()
+        val viewModel = ViewModelProvider(
+            store,
+            GameViewModelFactory(InMemoryGameProgressRepository()),
+        )[GameViewModel::class.java]
+
+        viewModel.onEvent(GameUiEvent.Start)
+        runCurrent()
+        store.clear()
+
+        val elapsed = viewModel.state.value.elapsedSecAtLevel
+        advanceTimeBy(4_000)
+        runCurrent()
+        assertEquals(elapsed, viewModel.state.value.elapsedSecAtLevel)
     }
 }

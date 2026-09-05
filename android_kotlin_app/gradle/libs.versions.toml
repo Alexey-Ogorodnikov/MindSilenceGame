@@ -11,6 +11,9 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 turbine = "1.2.0"
 coroutinesTest = "1.10.2"
+kover = "0.9.1"
+robolectric = "4.14.1"
+androidxTestCore = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,8 +36,11 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-lifecycle-runtime-testing = { group = "androidx.lifecycle", name = "lifecycle-runtime-testing", version.ref = "lifecycle" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-test-core = { group = "androidx.test", name = "core-ktx", version.ref = "androidxTestCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
