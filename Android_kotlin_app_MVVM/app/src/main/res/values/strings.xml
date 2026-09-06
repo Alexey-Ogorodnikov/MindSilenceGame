@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mind Silence (MVVM)</string>
+    <string name="level_label">Level</string>
+    <string name="start">Start</string>
+    <string name="thought">Thought</string>
+    <string name="level_progress">%1$d / %2$d s</string>
+    <string name="level_idle">—</string>
+    <string name="start_content_description">Start session</string>
+    <string name="thought_content_description">Log a thought and end the session</string>
+    <string name="session_summary_title">Session complete</string>
+    <string name="session_level_reached">Level reached: %1$d</string>
+    <string name="session_best_today">Best today: %1$d</string>
+    <string name="session_attempt_duration">Time in attempt: %1$d min %2$d s</string>
+    <string name="ok">OK</string>
+    <string name="highscore">Highscore</string>
+    <string name="high_scores_title">Highscore</string>
+    <string name="back">Back</string>
+    <string name="high_scores_empty">No records yet</string>
+    <string name="daily_attempts">Attempts: %1$d</string>
+    <string name="daily_total_time">Total: %1$d min %2$d s</string>
+    <string name="daily_best_level">Best level: %1$d</string>
+    <string name="menu_training">Mind Silence Training</string>
+    <string name="menu_how_to_train_cd">How to train</string>
+    <string name="how_to_train_title">How to train</string>
+    <string name="how_to_train_body">Sit comfortably and tap Start.\n\nWatch the mind. While there is silence — do nothing. The level rises on its own: each next one lasts twice as long.\n\nAs soon as a thought appears — tap Thought. The session will end, and you will see the level you reached.\n\nThe goal is to stay in silence as long as possible.</string>
+</resources>

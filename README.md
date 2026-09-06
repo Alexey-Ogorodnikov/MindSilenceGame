@@ -9,22 +9,32 @@ Privacy policy: [`legal/privacy-policy.md`](legal/privacy-policy.md).
 
 ## Run the app
 
-The playable build is Kotlin and Jetpack Compose. In Android Studio open **`Android_kotlin_app_MVI/`**, not the repository root.
+Two Kotlin / Jetpack Compose Gradle roots. Open **one folder** in Android Studio, not the repository root.
+
+Play Store / signing uses **MVI**:
 
 ```text
 cd Android_kotlin_app_MVI
 ./gradlew :app:assembleDebug
 ```
 
+MVVM + Clean Architecture + Hilt (same gameplay, package `com.mindsilence.game.mvvm`):
+
+```text
+cd Android_kotlin_app_MVVM
+./gradlew :app:assembleDebug
+```
+
 On Windows: `.\gradlew.bat :app:assembleDebug`.
 
-Package `com.mindsilence.game` · minSdk 26 · target/compile 36.
+minSdk 26 · target/compile 36.
 
 ## Repository
 
 | Path | Role |
 |------|------|
-| [`Android_kotlin_app_MVI/`](Android_kotlin_app_MVI/) | The Android app (open this in Android Studio) |
+| [`Android_kotlin_app_MVI/`](Android_kotlin_app_MVI/) | MVI Android app (open this for Play builds) |
+| [`Android_kotlin_app_MVVM/`](Android_kotlin_app_MVVM/) | MVVM + Clean Architecture + Hilt copy |
 | [`android_maui_app/`](android_maui_app/) | Empty stub — no MAUI project yet |
+| [`handbook/`](handbook/) | Product and architecture canon |
 | [`legal/`](legal/) | Privacy policy (published via GitHub Pages) |
-
