@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Night must not darken splash or launcher; same white as values/. -->
+    <color name="maui_splash_color">#FFFFFF</color>
+    <color name="splash_background">#FFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

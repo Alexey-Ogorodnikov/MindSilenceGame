@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:res="clr-namespace:MindSilence.Resources"
+             xmlns:menu="clr-namespace:MindSilence.Presentation.Menu"
+             x:Class="MindSilence.Presentation.Menu.MenuPage"
+             x:DataType="menu:MenuViewModel">
+    <ContentView.Resources>
+        <x:Double x:Key="MenuInfoButtonSize">48</x:Double>
+    </ContentView.Resources>
+    <Grid>
+        <Grid ColumnDefinitions="48,Auto,48"
+              ColumnSpacing="8"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              Padding="24,0"
+              SafeAreaEdges="Container">
+            <Button Grid.Column="1"
+                    Text="{x:Static res:AppResources.menu_training}"
+                    Command="{Binding OpenTrainingCommand}"
+                    MinimumWidthRequest="120"
+                    MinimumHeightRequest="48" />
+            <ImageButton Grid.Column="2"
+                         Source="ic_info.png"
+                         WidthRequest="{StaticResource MenuInfoButtonSize}"
+                         HeightRequest="{StaticResource MenuInfoButtonSize}"
+                         MinimumWidthRequest="{StaticResource MenuInfoButtonSize}"
+                         MinimumHeightRequest="{StaticResource MenuInfoButtonSize}"
+                         Padding="12"
+                         BackgroundColor="Transparent"
+                         BorderWidth="0"
+                         CornerRadius="24"
+                         Aspect="AspectFit"
+                         Command="{Binding OpenHowToTrainCommand}"
+                         SemanticProperties.Description="{x:Static res:AppResources.menu_how_to_train_cd}" />
+        </Grid>
+
+        <Grid IsVisible="{Binding ShowHowToTrain}"
+              BackgroundColor="{StaticResource DialogScrim}"
+              SafeAreaEdges="None">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DismissHowToTrainCommand}" />
+            </Grid.GestureRecognizers>
+            <Border MaximumWidthRequest="400"
+                    Margin="24"
+                    Padding="24"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CalmSurfaceContainerHighLight}, Dark={StaticResource CalmSurfaceContainerHigh}}"
+                    StrokeShape="RoundRectangle 28">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="{x:Static res:AppResources.how_to_train_title}"
+                           FontSize="24" />
+                    <Label Text="{x:Static res:AppResources.how_to_train_body}"
+                           FontSize="16"
+                           LineBreakMode="WordWrap" />
+                    <Button Text="{x:Static res:AppResources.ok}"
+                            Style="{StaticResource TextButton}"
+                            Command="{Binding DismissHowToTrainCommand}"
+                            HorizontalOptions="End" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentView>

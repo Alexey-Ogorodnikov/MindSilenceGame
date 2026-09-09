@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:res="clr-namespace:MindSilence.Resources"
+             xmlns:game="clr-namespace:MindSilence.Presentation.Game"
+             x:Class="MindSilence.Presentation.Game.GamePage"
+             x:DataType="game:GameViewModel">
+    <Grid>
+        <Grid Padding="24,32"
+              RowDefinitions="48,*,Auto"
+              IsClippedToBounds="False"
+              SafeAreaEdges="Container">
+            <VerticalStackLayout Grid.Row="1"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Fill"
+                                 Spacing="16"
+                                 IsClippedToBounds="False">
+                <Label Text="{x:Static res:AppResources.level_label}"
+                       FontSize="22"
+                       Opacity="0.8"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <Grid x:Name="RingHost"
+                      HorizontalOptions="Center"
+                      WidthRequest="480"
+                      HeightRequest="480"
+                      IsClippedToBounds="False">
+                    <Image Source="circle.png"
+                           Aspect="AspectFit"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           InputTransparent="True"
+                           ZIndex="0" />
+                    <Label x:Name="LevelLabel"
+                           Text="{Binding LevelDisplayText}"
+                           FontSize="42.75"
+                           FontFamily="OpenSansRegular"
+                           TextColor="{StaticResource CalmBlue}"
+                           BackgroundColor="Transparent"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Start"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="NoWrap"
+                           InputTransparent="True"
+                           ZIndex="1" />
+                </Grid>
+
+                <VerticalStackLayout Spacing="16"
+                                     HorizontalOptions="Fill"
+                                     Opacity="{Binding ProgressOpacity}"
+                                     InputTransparent="{Binding IsIdle}">
+                    <ProgressBar Progress="{Binding ProgressFraction}"
+                                 ProgressColor="{StaticResource CalmBlue}"
+                                 HeightRequest="4"
+                                 Margin="0,8,0,0"
+                                 HorizontalOptions="Fill" />
+                    <Label Text="{Binding LevelProgressText}"
+                           FontSize="16"
+                           Opacity="0.7"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout Grid.Row="2"
+                                   HorizontalOptions="Center"
+                                   Spacing="16">
+                <Button Text="{x:Static res:AppResources.start}"
+                        Command="{Binding StartCommand}"
+                        MinimumWidthRequest="120"
+                        MinimumHeightRequest="48"
+                        SemanticProperties.Description="{x:Static res:AppResources.start_content_description}" />
+                <Button Text="{x:Static res:AppResources.thought}"
+                        Command="{Binding ThoughtCommand}"
+                        BackgroundColor="{StaticResource CalmGreen}"
+                        MinimumWidthRequest="120"
+                        MinimumHeightRequest="48"
+                        SemanticProperties.Description="{x:Static res:AppResources.thought_content_description}" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <Grid IsVisible="{Binding HasSessionSummary}"
+              BackgroundColor="{StaticResource DialogScrim}"
+              SafeAreaEdges="None">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DismissSessionSummaryCommand}" />
+            </Grid.GestureRecognizers>
+            <Border MaximumWidthRequest="400"
+                    Margin="24"
+                    Padding="24"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CalmSurfaceContainerHighLight}, Dark={StaticResource CalmSurfaceContainerHigh}}"
+                    StrokeShape="RoundRectangle 28">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="{x:Static res:AppResources.session_summary_title}"
+                           FontSize="24" />
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="{Binding SessionLevelReachedText}"
+                               FontSize="16" />
+                        <Label Text="{Binding SessionBestTodayText}"
+                               FontSize="16" />
+                        <Label Text="{Binding SessionAttemptDurationText}"
+                               FontSize="16" />
+                    </VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="8"
+                                           HorizontalOptions="End">
+                        <Button Text="{x:Static res:AppResources.highscore}"
+                                Style="{StaticResource TextButton}"
+                                Command="{Binding OpenHighScoresCommand}" />
+                        <Button Text="{x:Static res:AppResources.ok}"
+                                Style="{StaticResource TextButton}"
+                                Command="{Binding DismissSessionSummaryCommand}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentView>

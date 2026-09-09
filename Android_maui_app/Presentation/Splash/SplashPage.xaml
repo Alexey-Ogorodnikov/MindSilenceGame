@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:res="clr-namespace:MindSilence.Resources"
+             xmlns:splash="clr-namespace:MindSilence.Presentation.Splash"
+             x:Class="MindSilence.Presentation.Splash.SplashPage"
+             x:DataType="splash:SplashViewModel"
+             BackgroundColor="{StaticResource SplashBackground}"
+             NavigationPage.HasNavigationBar="False">
+    <!-- Icon is centered on the full window (same slot as system splash). Title sits under the slot, not in a centered column. -->
+    <Grid x:Name="SplashRoot"
+          BackgroundColor="{StaticResource SplashBackground}"
+          SafeAreaEdges="None">
+        <Image x:Name="SplashIcon"
+               Source="splash_icon.png"
+               WidthRequest="{x:Static splash:SplashDefaults.IconSize}"
+               HeightRequest="{x:Static splash:SplashDefaults.IconSize}"
+               Aspect="AspectFit"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               AutomationId="{x:Static splash:SplashDefaults.IconTestTag}"
+               SemanticProperties.Description=""
+               AutomationProperties.IsInAccessibleTree="False" />
+        <Label x:Name="TitleLabel"
+               Text="{x:Static res:AppResources.app_name}"
+               FontFamily="serif"
+               FontSize="{x:Static splash:SplashDefaults.TitleFontSize}"
+               CharacterSpacing="{x:Static splash:SplashDefaults.TitleLetterSpacing}"
+               HorizontalOptions="Center"
+               VerticalOptions="Start"
+               HorizontalTextAlignment="Center"
+               TextColor="{StaticResource SplashTitleGradientMid}" />
+    </Grid>
+</ContentPage>
