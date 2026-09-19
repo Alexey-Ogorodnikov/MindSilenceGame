@@ -15,18 +15,9 @@ public sealed class InMemoryGameProgressRepository : IGameProgressRepository
 	{
 		var today = DateOnly.FromDateTime(DateTime.Today);
 		if (!_statsByDate.TryGetValue(today, out var current))
-		{
-			current = new DailyStats(today, Attempts: 1, totalSeconds, levelReached);
-		}
+			current = DailyStats.ForFirstAttempt(today, levelReached, totalSeconds);
 		else
-		{
-			current = current with
-			{
-				Attempts = current.Attempts + 1,
-				TotalSeconds = current.TotalSeconds + totalSeconds,
-				BestLevel = Math.Max(current.BestLevel, levelReached),
-			};
-		}
+			current = current.AddAttempt(levelReached, totalSeconds);
 
 		_statsByDate[today] = current;
 		return current.BestLevel;

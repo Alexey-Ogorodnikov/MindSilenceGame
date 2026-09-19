@@ -53,7 +53,7 @@
                                 <Label Text="{Binding DateText}"
                                        FontSize="16"
                                        FontFamily="OpenSansSemibold"
-                                       TextColor="{StaticResource CalmBlue}" />
+                                       TextColor="{DynamicResource CalmBlue}" />
                                 <Label Text="{Binding AttemptsText}"
                                        FontSize="16" />
                                 <Label Text="{Binding TotalTimeText}"

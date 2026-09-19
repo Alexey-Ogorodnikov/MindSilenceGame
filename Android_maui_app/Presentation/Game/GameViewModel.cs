@@ -20,6 +20,7 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 	private readonly bool _autoTick;
 	private CancellationTokenSource? _tickCts;
 	private bool _isTicking;
+	private int _tickEpoch;
 	private bool _wasRunningBeforeBackground;
 	private bool _disposed;
 
@@ -82,17 +83,17 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 		IsRunning ? Level.ToString(English) : AppResources.level_idle;
 
 	public string LevelProgressText =>
-		FormatResx(AppResources.level_progress, ElapsedSecAtLevel, RequiredSecAtLevel);
+		ResxFormat.Format(AppResources.level_progress, ElapsedSecAtLevel, RequiredSecAtLevel);
 
 	public string SessionLevelReachedText =>
 		SessionSummary is null
 			? string.Empty
-			: FormatResx(AppResources.session_level_reached, SessionSummary.LevelReached);
+			: ResxFormat.Format(AppResources.session_level_reached, SessionSummary.LevelReached);
 
 	public string SessionBestTodayText =>
 		SessionSummary is null
 			? string.Empty
-			: FormatResx(AppResources.session_best_today, SessionSummary.BestToday);
+			: ResxFormat.Format(AppResources.session_best_today, SessionSummary.BestToday);
 
 	public string SessionAttemptDurationText
 	{
@@ -102,7 +103,7 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 				return string.Empty;
 
 			var total = SessionSummary.TotalSeconds;
-			return FormatResx(AppResources.session_attempt_duration, total / 60, total % 60);
+			return ResxFormat.Format(AppResources.session_attempt_duration, total / 60, total % 60);
 		}
 	}
 
@@ -128,7 +129,7 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 	[RelayCommand(CanExecute = nameof(CanStart))]
 	public void OnStart()
 	{
-		if (Phase == GamePhase.Running)
+		if (Phase == GamePhase.Running || SessionSummary is not null)
 			return;
 
 		Phase = GamePhase.Running;
@@ -214,12 +215,14 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 			return;
 
 		_tickCts = new CancellationTokenSource();
-		_ = RunTickLoopAsync(_tickCts.Token);
+		var epoch = _tickEpoch;
+		_ = RunTickLoopAsync(epoch, _tickCts.Token);
 	}
 
 	private void StopTicking()
 	{
 		_isTicking = false;
+		_tickEpoch++;
 		if (_tickCts is null)
 			return;
 
@@ -228,7 +231,7 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 		_tickCts = null;
 	}
 
-	private async Task RunTickLoopAsync(CancellationToken token)
+	private async Task RunTickLoopAsync(int epoch, CancellationToken token)
 	{
 		try
 		{
@@ -238,7 +241,7 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 				if (token.IsCancellationRequested)
 					return;
 
-				RunOnUi(AdvanceTick);
+				RunOnUi(() => AdvanceTick(epoch));
 			}
 		}
 		catch (OperationCanceledException)
@@ -248,13 +251,19 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 
 	internal void StepTick(int count = 1)
 	{
+		var epoch = _tickEpoch;
 		for (var i = 0; i < count; i++)
-			AdvanceTick();
+			AdvanceTick(epoch);
 	}
 
-	private void AdvanceTick()
+	/// <summary>
+	/// A tick posted before the previous stop, as if the UI dispatcher ran it after restart.
+	/// </summary>
+	internal void StepStaleTick() => AdvanceTick(_tickEpoch - 1);
+
+	private void AdvanceTick(int epoch)
 	{
-		if (!_isTicking || Phase != GamePhase.Running)
+		if (epoch != _tickEpoch || !_isTicking || Phase != GamePhase.Running)
 			return;
 
 		var nextElapsed = ElapsedSecAtLevel + 1;
@@ -299,12 +308,4 @@ public sealed partial class GameViewModel : ObservableObject, IDisposable
 
 	partial void OnSessionSummaryChanged(SessionSummary? value) =>
 		StartCommand.NotifyCanExecuteChanged();
-
-	private static string FormatResx(string androidPattern, params object[] args)
-	{
-		var format = androidPattern
-			.Replace("%1$d", "{0}", StringComparison.Ordinal)
-			.Replace("%2$d", "{1}", StringComparison.Ordinal);
-		return string.Format(English, format, args);
-	}
 }

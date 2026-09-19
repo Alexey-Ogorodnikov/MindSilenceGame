@@ -47,16 +47,8 @@ public sealed record HighScoreDayItem(
 		var seconds = stats.TotalSeconds % 60;
 		return new HighScoreDayItem(
 			stats.Date.ToString("d MMMM yyyy", English),
-			FormatResx(AppResources.daily_attempts, stats.Attempts),
-			FormatResx(AppResources.daily_total_time, minutes, seconds),
-			FormatResx(AppResources.daily_best_level, stats.BestLevel));
-	}
-
-	private static string FormatResx(string androidPattern, params object[] args)
-	{
-		var format = androidPattern
-			.Replace("%1$d", "{0}", StringComparison.Ordinal)
-			.Replace("%2$d", "{1}", StringComparison.Ordinal);
-		return string.Format(English, format, args);
+			ResxFormat.Format(AppResources.daily_attempts, stats.Attempts),
+			ResxFormat.Format(AppResources.daily_total_time, minutes, seconds),
+			ResxFormat.Format(AppResources.daily_best_level, stats.BestLevel));
 	}
 }

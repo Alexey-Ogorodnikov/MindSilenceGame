@@ -1,0 +1,18 @@
+{
+    "name": "MindSilence.Runtime",
+    "rootNamespace": "MindSilence",
+    "references": [
+        "UnityEngine.UI",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

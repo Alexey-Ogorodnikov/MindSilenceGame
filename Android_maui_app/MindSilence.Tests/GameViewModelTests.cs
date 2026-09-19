@@ -129,6 +129,53 @@ public sealed class GameViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void Start_while_session_summary_is_ignored()
+	{
+		var viewModel = CreateGame();
+		viewModel.OnStart();
+		viewModel.StepTick(1);
+		viewModel.OnThought();
+		var summary = viewModel.SessionSummary;
+
+		viewModel.OnStart();
+
+		Assert.Equal(GamePhase.Idle, viewModel.Phase);
+		Assert.Equal(0, viewModel.Level);
+		Assert.Equal(summary, viewModel.SessionSummary);
+		Assert.False(viewModel.StartCommand.CanExecute(null));
+		Assert.False(viewModel.ThoughtCommand.CanExecute(null));
+	}
+
+	[Fact]
+	public void Dismiss_session_summary_clears_dialog_and_enables_start()
+	{
+		var viewModel = CreateGame();
+		viewModel.OnStart();
+		viewModel.OnThought();
+
+		viewModel.OnDismissSessionSummary();
+
+		Assert.Null(viewModel.SessionSummary);
+		Assert.True(viewModel.StartCommand.CanExecute(null));
+	}
+
+	[Fact]
+	public void Stale_tick_after_restart_is_ignored()
+	{
+		var viewModel = CreateGame();
+		viewModel.OnStart();
+		viewModel.StepTick(1);
+		viewModel.OnAppBackgrounded();
+		viewModel.OnAppForegrounded();
+
+		viewModel.StepStaleTick();
+
+		Assert.Equal(1, viewModel.ElapsedSecAtLevel);
+		viewModel.StepTick(1);
+		Assert.Equal(2, viewModel.ElapsedSecAtLevel);
+	}
+
+	[Fact]
 	public void Background_while_running_stops_tick_and_keeps_phase()
 	{
 		var viewModel = CreateGame();

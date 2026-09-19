@@ -28,6 +28,42 @@ Thumbs.db
 .cursor/mcp.json
 .cursor/rules/repo-hygiene.mdc
 .cursor/rules/handbook.mdc
+.cursor/rules/unity-quest.mdc
+/mcp.json
 
 # Loose design assets at repo root (app uses copies under Android_kotlin_app_MVI/app/src/main/res/ and Android_kotlin_app_MVVM/app/src/main/res/)
 /*.png
+
+# Unity Quest (Unity_quest_app/) — commit Assets/, Packages/, ProjectSettings/; never Library/Temp/builds
+Unity_quest_app/[Ll]ibrary/
+Unity_quest_app/[Tt]emp/
+Unity_quest_app/[Oo]bj/
+Unity_quest_app/[Bb]uild/
+Unity_quest_app/[Bb]uilds/
+Unity_quest_app/[Ll]ogs/
+Unity_quest_app/.utmp/
+Unity_quest_app/[Uu]ser[Ss]ettings/
+Unity_quest_app/MemoryCaptures/
+Unity_quest_app/Recordings/
+Unity_quest_app/*.csproj
+Unity_quest_app/*.unityproj
+Unity_quest_app/*.sln
+Unity_quest_app/*.suo
+Unity_quest_app/*.user
+Unity_quest_app/*.userprefs
+Unity_quest_app/*.pidb
+Unity_quest_app/*.booproj
+Unity_quest_app/*.svd
+Unity_quest_app/*.pdb
+Unity_quest_app/*.mdb
+Unity_quest_app/*.opendb
+Unity_quest_app/*.VC.db
+Unity_quest_app/*.pidb.meta
+Unity_quest_app/*.pdb.meta
+Unity_quest_app/*.mdb.meta
+Unity_quest_app/sysinfo.txt
+Unity_quest_app/*.unitypackage
+Unity_quest_app/.vs/
+Unity_quest_app/*.log
+Unity_quest_app_create.log
+Unity_quest_app_scaffold.log

@@ -1,0 +1,3 @@
+<linker>
+  <assembly fullname="Unity.XR.Interaction.Toolkit" preserve="all"/>
+</linker>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using MindSilence.Presentation.Navigation;
 using MindSilence.Presentation.Splash;
 
@@ -9,6 +10,8 @@ public partial class App : Application
 	private readonly IServiceProvider _services;
 	private readonly SplashViewModelFactory _splashFactory;
 	private Window? _window;
+	private SplashPage? _splashPage;
+	private AppHostPage? _hostPage;
 	private bool _listening;
 
 	public App(IServiceProvider services, SplashViewModelFactory splashFactory)
@@ -26,33 +29,35 @@ public partial class App : Application
 		var splash = _splashFactory.Current
 			?? throw new InvalidOperationException("SplashViewModel must be created before the window.");
 
-		var splashPage = _services.GetRequiredService<SplashPage>();
-		var hostPage = _services.GetRequiredService<AppHostPage>();
+		_splashPage = _services.GetRequiredService<SplashPage>();
+		_hostPage = _services.GetRequiredService<AppHostPage>();
 
 		if (!_listening)
 		{
-			splash.PropertyChanged += (_, e) =>
-			{
-				if (e.PropertyName is nameof(SplashViewModel.ShowBrandedSplash) or null)
-				{
-					MainThread.BeginInvokeOnMainThread(() => ApplyPage(splash, splashPage, hostPage));
-				}
-			};
+			splash.PropertyChanged += OnSplashPropertyChanged;
 			_listening = true;
 		}
 
-		_window = new Window(splash.ShowBrandedSplash ? (Page)splashPage : hostPage);
+		_window = new Window(splash.ShowBrandedSplash ? (Page)_splashPage : _hostPage);
 		return _window;
 	}
 
-	private void ApplyPage(SplashViewModel splash, SplashPage splashPage, AppHostPage hostPage)
+	private void OnSplashPropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_window is null)
+		if (e.PropertyName is nameof(SplashViewModel.ShowBrandedSplash) or null)
+		{
+			MainThread.BeginInvokeOnMainThread(ApplyCurrentPage);
+		}
+	}
+
+	private void ApplyCurrentPage()
+	{
+		if (_window is null || _splashFactory.Current is null || _splashPage is null || _hostPage is null)
 		{
 			return;
 		}
 
-		Page page = splash.ShowBrandedSplash ? splashPage : hostPage;
+		Page page = _splashFactory.Current.ShowBrandedSplash ? _splashPage : _hostPage;
 		if (!ReferenceEquals(_window.Page, page))
 		{
 			_window.Page = page;

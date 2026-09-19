@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Splash stays white. After splash, light/dark follow the OS (Kotlin MindSilenceApp). -->
+    <!-- Splash stays white. After splash the app stays on the light calm palette; OS dark does not switch it. -->
     <Color x:Key="SplashBackground">#FFFFFF</Color>
     <Color x:Key="IcLauncherBackground">#FFFFFF</Color>
     <Color x:Key="CalmBlue">#4A6FA5</Color>

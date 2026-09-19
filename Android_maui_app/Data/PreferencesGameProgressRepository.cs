@@ -37,18 +37,9 @@ public sealed class PreferencesGameProgressRepository : IGameProgressRepository
 		var today = DateOnly.FromDateTime(DateTime.Today);
 		var statsByDate = LoadStats();
 		if (!statsByDate.TryGetValue(today, out var current))
-		{
-			current = new DailyStats(today, Attempts: 1, totalSeconds, levelReached);
-		}
+			current = DailyStats.ForFirstAttempt(today, levelReached, totalSeconds);
 		else
-		{
-			current = current with
-			{
-				Attempts = current.Attempts + 1,
-				TotalSeconds = current.TotalSeconds + totalSeconds,
-				BestLevel = Math.Max(current.BestLevel, levelReached),
-			};
-		}
+			current = current.AddAttempt(levelReached, totalSeconds);
 
 		statsByDate[today] = current;
 		SaveStats(statsByDate);
@@ -138,7 +129,7 @@ public sealed class PreferencesGameProgressRepository : IGameProgressRepository
 
 		SaveStats(new Dictionary<DateOnly, DailyStats>
 		{
-			[date] = new DailyStats(date, Attempts: 1, TotalSeconds: 0, BestLevel: legacyBest),
+			[date] = DailyStats.ForFirstAttempt(date, levelReached: legacyBest, totalSeconds: 0),
 		});
 	}
 
