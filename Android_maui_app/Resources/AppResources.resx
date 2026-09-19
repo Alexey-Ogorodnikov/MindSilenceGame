@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app_name" xml:space="preserve">
+    <value>Mind Silence (MAUI)</value>
+  </data>
+  <data name="level_label" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="thought" xml:space="preserve">
+    <value>Thought</value>
+  </data>
+  <data name="level_progress" xml:space="preserve">
+    <value>%1$d / %2$d s</value>
+  </data>
+  <data name="level_idle" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="start_content_description" xml:space="preserve">
+    <value>Start session</value>
+  </data>
+  <data name="thought_content_description" xml:space="preserve">
+    <value>Log a thought and end the session</value>
+  </data>
+  <data name="session_summary_title" xml:space="preserve">
+    <value>Session complete</value>
+  </data>
+  <data name="session_level_reached" xml:space="preserve">
+    <value>Level reached: %1$d</value>
+  </data>
+  <data name="session_best_today" xml:space="preserve">
+    <value>Best today: %1$d</value>
+  </data>
+  <data name="session_attempt_duration" xml:space="preserve">
+    <value>Time in attempt: %1$d min %2$d s</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="highscore" xml:space="preserve">
+    <value>Highscore</value>
+  </data>
+  <data name="high_scores_title" xml:space="preserve">
+    <value>Highscore</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="high_scores_empty" xml:space="preserve">
+    <value>No records yet</value>
+  </data>
+  <data name="daily_attempts" xml:space="preserve">
+    <value>Attempts: %1$d</value>
+  </data>
+  <data name="daily_total_time" xml:space="preserve">
+    <value>Total: %1$d min %2$d s</value>
+  </data>
+  <data name="daily_best_level" xml:space="preserve">
+    <value>Best level: %1$d</value>
+  </data>
+  <data name="menu_training" xml:space="preserve">
+    <value>Mind Silence Training</value>
+  </data>
+  <data name="menu_how_to_train_cd" xml:space="preserve">
+    <value>How to train</value>
+  </data>
+  <data name="how_to_train_title" xml:space="preserve">
+    <value>How to train</value>
+  </data>
+  <data name="how_to_train_body" xml:space="preserve">
+    <value>Sit comfortably and tap Start.
+
+Watch the mind. While there is silence — do nothing. The level rises on its own: each next one lasts twice as long.
+
+As soon as a thought appears — tap Thought. The session will end, and you will see the level you reached.
+
+The goal is to stay in silence as long as possible.
+
+Practice for just 5 minutes a day. With regular practice, you may feel calmer and more balanced, while your thoughts become quieter, clearer, and more peaceful.</value>
+  </data>
+</root>

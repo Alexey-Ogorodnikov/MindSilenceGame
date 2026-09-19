@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MindSilence.csproj" />
+  <Project Path="MindSilence.Tests/MindSilence.Tests.csproj" />
+</Solution>

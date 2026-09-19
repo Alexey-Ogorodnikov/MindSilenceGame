@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4A6FA5</color>
+    <color name="colorPrimaryDark">#121820</color>
+    <color name="colorAccent">#5B8A72</color>
+    <color name="maui_splash_color">#FFFFFF</color>
+    <color name="splash_background">#FFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="calm_blue">#4A6FA5</color>
+    <color name="calm_green">#5B8A72</color>
+    <color name="calm_background_dark">#121820</color>
+    <color name="calm_surface_dark">#1A2330</color>
+    <color name="splash_title_gradient_start">#1FC0E0</color>
+    <color name="splash_title_gradient_mid">#1A9AD4</color>
+    <color name="splash_title_gradient_end">#0E72B8</color>
+    <color name="splash_title_shadow">#1A9AD4</color>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:nav="clr-namespace:MindSilence.Presentation.Navigation"
+             x:Class="MindSilence.Presentation.Navigation.AppHostPage"
+             x:DataType="nav:AppViewModel"
+             BackgroundColor="{AppThemeBinding Light={StaticResource CalmBackgroundLight}, Dark={StaticResource CalmBackgroundDark}}"
+             SafeAreaEdges="None"
+             NavigationPage.HasNavigationBar="False">
+    <Grid>
+        <ContentView x:Name="MenuSlot"
+                     IsVisible="{Binding ShowMenu}" />
+
+        <ContentView x:Name="TrainingSlot"
+                     IsVisible="{Binding ShowTraining}" />
+
+        <ContentView x:Name="HighScoresSlot"
+                     IsVisible="{Binding ShowHighScores}" />
+    </Grid>
+</ContentPage>

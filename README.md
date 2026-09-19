@@ -35,6 +35,6 @@ minSdk 26 · target/compile 36.
 |------|------|
 | [`Android_kotlin_app_MVI/`](Android_kotlin_app_MVI/) | MVI Android app (open this for Play builds) |
 | [`Android_kotlin_app_MVVM/`](Android_kotlin_app_MVVM/) | MVVM + Clean Architecture + Hilt copy |
-| [`android_maui_app/`](android_maui_app/) | Empty stub — no MAUI project yet |
+| [`Android_maui_app/`](Android_maui_app/) | Empty stub — no MAUI project yet |
 | [`handbook/`](handbook/) | Product and architecture canon |
 | [`legal/`](legal/) | Privacy policy (published via GitHub Pages) |
