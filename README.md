@@ -5,7 +5,7 @@ A calm Android training game. Sit comfortably, tap **Start**, and do nothing whi
 No ads, accounts, or trackers. Daily attempts, time, and best level stay on this device.
 
 
-Privacy policy: [`legal/privacy-policy.md`](legal/privacy-policy.md).
+Privacy policy: [`legal/privacy-policy.md`](legal/privacy-policy.md). Published from `master` at https://alexey-ogorodnikov.github.io/MindSilenceGame/privacy-policy.html.
 
 ## Run the app
 
@@ -37,4 +37,4 @@ minSdk 26 · target/compile 36.
 | [`Android_kotlin_app_MVVM/`](Android_kotlin_app_MVVM/) | MVVM + Clean Architecture + Hilt copy |
 | [`Android_maui_app/`](Android_maui_app/) | Empty stub — no MAUI project yet |
 | [`handbook/`](handbook/) | Product and architecture canon |
-| [`legal/`](legal/) | Privacy policy (published via GitHub Pages) |
+| [`legal/`](legal/) | Privacy policy (GitHub Pages from `master`) |
