@@ -27,7 +27,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule() // viewModelScope uses TestDispatcher.
 
-    /** Start from Idle goes to Running level 1 with a 4s requirement. */
+    /** Start from Idle goes to Running level 1 with a 5s requirement. */
     @Test
     fun `start transitions to running level one`() = runTest { // Idle → Running.
         val viewModel = gameViewModel() // In-memory store.
@@ -39,20 +39,20 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
         assertEquals(GamePhase.Running, state.phase) // Session live.
         assertEquals(1, state.level) // Always starts at 1.
         assertEquals(0, state.elapsedSecAtLevel) // Fresh bar.
-        assertEquals(4, state.requiredSecAtLevel) // durationForLevel(1).
+        assertEquals(5, state.requiredSecAtLevel) // durationForLevel(1).
 
         viewModel.onThought() // Stop the tick so the test does not leak.
         runCurrent()
     }
 
-    /** Four seconds of silence complete level 1 and open level 2. */
+    /** Five seconds of silence complete level 1 and open level 2. */
     @Test
-    fun `four seconds of silence advances to level two`() = runTest { // Level-up.
+    fun `five seconds of silence advances to level two`() = runTest { // Level-up.
         val viewModel = gameViewModel() // In-memory store.
         viewModel.onStart() // Running.
         runCurrent()
 
-        advanceTimeBy(4_000) // One level duration.
+        advanceTimeBy(5_000) // One level duration.
         runCurrent()
 
         assertEquals(2, viewModel.state.value.level) // Next level.
@@ -62,16 +62,16 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
         runCurrent()
     }
 
-    /** Level 2 lasts 8s; after that the session is on level 3. */
+    /** Level 2 lasts 10s; after that the session is on level 3. */
     @Test
-    fun `eight seconds on level two advances to level three`() = runTest { // Two level-ups.
+    fun `ten seconds on level two advances to level three`() = runTest { // Two level-ups.
         val viewModel = gameViewModel() // In-memory store.
         viewModel.onStart() // Level 1.
         runCurrent()
 
-        advanceTimeBy(4_000) // Finish level 1.
+        advanceTimeBy(5_000) // Finish level 1.
         runCurrent()
-        advanceTimeBy(8_000) // Finish level 2.
+        advanceTimeBy(10_000) // Finish level 2.
         runCurrent()
 
         assertEquals(3, viewModel.state.value.level) // Unbounded.
@@ -107,7 +107,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
 
         viewModel.onStart() // First run.
         runCurrent()
-        advanceTimeBy(4_000) // Reach level 2.
+        advanceTimeBy(5_000) // Reach level 2.
         runCurrent()
         viewModel.onThought() // Record level 2.
         runCurrent()
@@ -211,42 +211,44 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
     fun `totalSessionSeconds sums completed levels and current progress`() { // Pure function.
         assertEquals(0, totalSessionSeconds(level = 0, elapsedSecAtLevel = 5)) // No session.
         assertEquals(0, totalSessionSeconds(level = 1, elapsedSecAtLevel = 0)) // Just started.
-        assertEquals(4, totalSessionSeconds(level = 2, elapsedSecAtLevel = 0)) // Finished level 1.
-        assertEquals(12, totalSessionSeconds(level = 3, elapsedSecAtLevel = 0)) // 4+8.
-        assertEquals(13, totalSessionSeconds(level = 3, elapsedSecAtLevel = 1)) // 4+8+1.
+        assertEquals(5, totalSessionSeconds(level = 2, elapsedSecAtLevel = 0)) // Finished level 1.
+        assertEquals(15, totalSessionSeconds(level = 3, elapsedSecAtLevel = 0)) // 5+10.
+        assertEquals(16, totalSessionSeconds(level = 3, elapsedSecAtLevel = 1)) // 5+10+1.
     }
 
-    /** Thought at level 3 with 0 elapsed stores 12 seconds. */
+    /** Thought at level 3 with 0 elapsed stores 15 seconds. */
     @Test
     fun `thought includes total session time in summary`() = runTest { // Duration in dialog.
         val viewModel = gameViewModel() // In-memory store.
         viewModel.onStart() // Level 1.
         runCurrent()
 
-        advanceTimeBy(4_000) // Level 2.
+        advanceTimeBy(5_000) // Level 2.
         runCurrent()
-        advanceTimeBy(8_000) // Level 3.
+        advanceTimeBy(10_000) // Level 3.
         runCurrent()
 
         viewModel.onThought() // Record.
         runCurrent()
 
-        assertEquals( // 4+8+0.
-            SessionSummary(levelReached = 3, bestToday = 3, totalSeconds = 12),
+        assertEquals( // 5+10+0.
+            SessionSummary(levelReached = 3, bestToday = 3, totalSeconds = 15),
             viewModel.state.value.sessionSummary,
         )
     }
 
-    /** durationForLevel doubles from 4 with no upper bound. */
+    /** durationForLevel is 5, 10, then doubles from 15 with no upper bound. */
     @Test
-    fun `durationForLevel returns geometric progression`() { // Pure function.
+    fun `durationForLevel returns 5 10 then doubles from 15`() { // Pure function.
         assertEquals(0, durationForLevel(0)) // Idle.
         assertEquals(0, durationForLevel(-1)) // Invalid.
-        assertEquals(4, durationForLevel(1)) // Level 1.
-        assertEquals(8, durationForLevel(2)) // Level 2.
-        assertEquals(16, durationForLevel(3)) // Level 3.
-        assertEquals(32, durationForLevel(4)) // Level 4.
-        assertEquals(64, durationForLevel(5)) // Level 5.
+        assertEquals(5, durationForLevel(1)) // Level 1.
+        assertEquals(10, durationForLevel(2)) // Level 2.
+        assertEquals(15, durationForLevel(3)) // Level 3.
+        assertEquals(30, durationForLevel(4)) // Level 4.
+        assertEquals(60, durationForLevel(5)) // Level 5.
+        assertEquals(120, durationForLevel(6)) // Level 6.
+        assertEquals(240, durationForLevel(7)) // Level 7.
     }
 
     /** A second Start while Running does not reset elapsed. */
@@ -315,7 +317,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
             assertEquals(GameUiEffect.KeepScreenOn(enabled = false), awaitItem()) // Flag off.
             assertEquals(GamePhase.Running, viewModel.state.value.phase) // No Pause UI.
             val elapsed = viewModel.state.value.elapsedSecAtLevel // Frozen.
-            advanceTimeBy(4_000) // Would have leveled up if ticking.
+            advanceTimeBy(5_000) // Would have leveled up if ticking.
             runCurrent()
             assertEquals(elapsed, viewModel.state.value.elapsedSecAtLevel) // Frozen.
             cancelAndIgnoreRemainingEvents() // Done.
@@ -342,7 +344,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
             runCurrent()
 
             assertEquals(GameUiEffect.KeepScreenOn(enabled = true), awaitItem()) // Flag on.
-            advanceTimeBy(4_000) // Level up once resumed.
+            advanceTimeBy(5_000) // Level up once resumed.
             runCurrent()
             assertEquals(2, viewModel.state.value.level) // Tick ran.
             cancelAndIgnoreRemainingEvents() // Done.
@@ -361,7 +363,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
 
         viewModel.onAppForegrounded() // No-op resume.
         runCurrent()
-        advanceTimeBy(4_000) // Still ticking from Start.
+        advanceTimeBy(5_000) // Still ticking from Start.
         runCurrent()
 
         assertEquals(GamePhase.Running, viewModel.state.value.phase) // Still running.
@@ -382,13 +384,13 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
     /** Running progress is elapsed / required. */
     @Test
     fun `running progress fraction is elapsed over required`() { // Half bar.
-        val running = GameUiState( // Level 1, 2 of 4s.
+        val running = GameUiState( // Level 2, 5 of 10s.
             phase = GamePhase.Running, // Tick UI.
-            level = 1, // 4s required.
-            elapsedSecAtLevel = 2, // Halfway.
+            level = 2, // 10s required.
+            elapsedSecAtLevel = 5, // Halfway.
         )
-        assertEquals(4, running.requiredSecAtLevel) // Level 1.
-        assertEquals(0.5f, running.progressFraction, 0.0001f) // 2/4.
+        assertEquals(10, running.requiredSecAtLevel) // Level 2.
+        assertEquals(0.5f, running.progressFraction, 0.0001f) // 5/10.
     }
 
     /** Overflow elapsed is coerced to 1f. */
@@ -396,7 +398,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
     fun `progress fraction is coerced to one`() { // Guard.
         val overflowing = GameUiState( // Impossible elapsed, still must not exceed 1.
             phase = GamePhase.Running, // Tick UI.
-            level = 1, // 4s required.
+            level = 1, // 5s required.
             elapsedSecAtLevel = 100, // Past the end.
         )
         assertEquals(1f, overflowing.progressFraction, 0.0001f) // coerceIn.
@@ -421,7 +423,7 @@ class GameViewModelTest { // Same scenarios as the MVI tests, calling named meth
         store.clear() // onCleared → stopTicking.
 
         val elapsed = viewModel.state.value.elapsedSecAtLevel // Frozen.
-        advanceTimeBy(4_000) // Would level up if still ticking.
+        advanceTimeBy(5_000) // Would level up if still ticking.
         runCurrent()
         assertEquals(elapsed, viewModel.state.value.elapsedSecAtLevel) // Frozen.
     }

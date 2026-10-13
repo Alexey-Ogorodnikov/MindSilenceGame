@@ -24,7 +24,7 @@ data class GameUiState( // Derived duration/progress live as getters.
     val elapsedSecAtLevel: Int = 0, // Seconds into the current level.
     val sessionSummary: SessionSummary? = null, // Non-null shows the complete dialog.
 ) { // Start derived properties.
-    val requiredSecAtLevel: Int // Seconds to finish this level (4, 8, 16, …).
+    val requiredSecAtLevel: Int // Seconds to finish this level (5, 10, 15, 30, …).
         get() = durationForLevel(level) // 0 when level is 0 (Idle).
 
     val progressFraction: Float // Linear bar for the current level only.

@@ -145,15 +145,10 @@ fun GameScreen( // Ring + buttons + optional summary.
         ) { // Start main column.
             Spacer(modifier = Modifier.height(48.dp)) // Push the ring down from the status bar.
 
-            Column( // Label, ring, progress.
+            Column( // Ring and progress.
                 horizontalAlignment = Alignment.CenterHorizontally, // Center children.
                 verticalArrangement = Arrangement.spacedBy(16.dp), // Gap.
             ) { // Start focus column.
-                Text( // "Level" heading.
-                    text = stringResource(R.string.level_label), // English label.
-                    style = MaterialTheme.typography.titleLarge, // Heading.
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f), // Softer than full onBackground.
-                ) // End level label.
                 LevelFocus( // Ring + number or idle placeholder.
                     text = if (state.phase == GamePhase.Running) { // Show the live level.
                         state.level.toString() // Current level.

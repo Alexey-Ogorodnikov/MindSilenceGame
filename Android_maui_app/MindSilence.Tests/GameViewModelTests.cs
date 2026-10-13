@@ -21,17 +21,17 @@ public sealed class GameViewModelTests : IDisposable
 		Assert.Equal(GamePhase.Running, viewModel.Phase);
 		Assert.Equal(1, viewModel.Level);
 		Assert.Equal(0, viewModel.ElapsedSecAtLevel);
-		Assert.Equal(4, viewModel.RequiredSecAtLevel);
+		Assert.Equal(5, viewModel.RequiredSecAtLevel);
 		Assert.Equal([true], keepScreen);
 	}
 
 	[Fact]
-	public void Four_ticks_of_silence_advance_to_level_two()
+	public void Five_ticks_of_silence_advance_to_level_two()
 	{
 		var viewModel = CreateGame();
 		viewModel.OnStart();
 
-		viewModel.StepTick(4);
+		viewModel.StepTick(5);
 
 		Assert.Equal(2, viewModel.Level);
 		Assert.Equal(0, viewModel.ElapsedSecAtLevel);
@@ -43,8 +43,8 @@ public sealed class GameViewModelTests : IDisposable
 		var viewModel = CreateGame();
 		viewModel.OnStart();
 
-		viewModel.StepTick(4);
-		viewModel.StepTick(8);
+		viewModel.StepTick(5);
+		viewModel.StepTick(10);
 
 		Assert.Equal(3, viewModel.Level);
 	}
@@ -77,7 +77,7 @@ public sealed class GameViewModelTests : IDisposable
 		var repository = new InMemoryGameProgressRepository();
 		var viewModel = CreateGame(repository);
 		viewModel.OnStart();
-		viewModel.StepTick(4);
+		viewModel.StepTick(5);
 		viewModel.OnThought();
 		viewModel.OnDismissSessionSummary();
 
@@ -92,12 +92,12 @@ public sealed class GameViewModelTests : IDisposable
 	{
 		var viewModel = CreateGame();
 		viewModel.OnStart();
-		viewModel.StepTick(4);
-		viewModel.StepTick(8);
+		viewModel.StepTick(5);
+		viewModel.StepTick(10);
 
 		viewModel.OnThought();
 
-		Assert.Equal(new SessionSummary(LevelReached: 3, BestToday: 3, TotalSeconds: 12), viewModel.SessionSummary);
+		Assert.Equal(new SessionSummary(LevelReached: 3, BestToday: 3, TotalSeconds: 15), viewModel.SessionSummary);
 	}
 
 	[Fact]
@@ -201,7 +201,7 @@ public sealed class GameViewModelTests : IDisposable
 		viewModel.OnAppBackgrounded();
 
 		viewModel.OnAppForegrounded();
-		viewModel.StepTick(4);
+		viewModel.StepTick(5);
 
 		Assert.Equal(2, viewModel.Level);
 	}

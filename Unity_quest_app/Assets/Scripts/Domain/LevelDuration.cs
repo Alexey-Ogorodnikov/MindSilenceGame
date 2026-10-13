@@ -9,7 +9,17 @@ namespace MindSilence.Domain
                 return 0;
             }
 
-            return 4 << (level - 1);
+            if (level == 1)
+            {
+                return 5;
+            }
+
+            if (level == 2)
+            {
+                return 10;
+            }
+
+            return 15 << (level - 3);
         }
 
         public static int TotalSessionSeconds(int level, int elapsedSecAtLevel)

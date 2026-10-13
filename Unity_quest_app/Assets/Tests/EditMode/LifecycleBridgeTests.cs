@@ -77,7 +77,7 @@ namespace MindSilence.Tests.EditMode
             bridge.NotifyPause(true);
 
             bridge.NotifyPause(false);
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(2, session.State.Level);
         }
@@ -129,12 +129,12 @@ namespace MindSilence.Tests.EditMode
             session.Start();
             bridge.NotifyPause(true);
             bridge.NotifyFocus(true);
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(1, session.State.Level);
 
             bridge.NotifyPause(false);
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
             Assert.AreEqual(2, session.State.Level);
         }
     }
