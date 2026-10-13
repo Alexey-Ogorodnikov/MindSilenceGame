@@ -113,21 +113,21 @@ namespace MindSilence.Tests.EditMode
             Assert.IsFalse(StartButton(training).interactable);
             Assert.IsTrue(ThoughtButton(training).interactable);
             Assert.AreEqual(1f, ProgressGroup(training).alpha);
-            Assert.AreEqual(AppStrings.FormatLevelProgress(0, 4), ProgressLabel(training).text);
+            Assert.AreEqual(AppStrings.FormatLevelProgress(0, 5), ProgressLabel(training).text);
         }
 
         [Test]
-        public void FourSeconds_AdvancesToLevelTwo()
+        public void FiveSeconds_AdvancesToLevelTwo()
         {
             var training = CreateTraining();
             training.Bind(_session);
             StartButton(training).onClick.Invoke();
 
-            _time.Advance(TimeSpan.FromSeconds(4));
+            _time.Advance(TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(2, _session.State.Level);
             Assert.AreEqual("2", Glyph(training).text);
-            Assert.AreEqual(AppStrings.FormatLevelProgress(0, 8), ProgressLabel(training).text);
+            Assert.AreEqual(AppStrings.FormatLevelProgress(0, 10), ProgressLabel(training).text);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace MindSilence.Tests.EditMode
             var training = CreateTraining();
             training.Bind(_session);
             StartButton(training).onClick.Invoke();
-            _time.Advance(TimeSpan.FromSeconds(4));
+            _time.Advance(TimeSpan.FromSeconds(5));
 
             ThoughtButton(training).onClick.Invoke();
 
@@ -156,7 +156,7 @@ namespace MindSilence.Tests.EditMode
                 AppStrings.FormatSessionBestToday(2),
                 overlay.Find(TrainingStub.SummaryCardName + "/" + TrainingStub.SummaryBestName).GetComponent<Text>().text);
             Assert.AreEqual(
-                AppStrings.FormatSessionAttemptDuration(0, 4),
+                AppStrings.FormatSessionAttemptDuration(0, 5),
                 overlay.Find(TrainingStub.SummaryCardName + "/" + TrainingStub.SummaryDurationName)
                     .GetComponent<Text>().text);
         }

@@ -172,7 +172,7 @@ namespace MindSilence.Tests.EditMode
             host.Training.transform.Find(AppHost.ContentRootName + "/" + TrainingStub.ButtonRowName + "/" + TrainingStub.StartButtonName)
                 .GetComponent<UnityEngine.UI.Button>()
                 .onClick.Invoke();
-            ((FakeTimeSource)host.TimeSource).Advance(TimeSpan.FromSeconds(4));
+            ((FakeTimeSource)host.TimeSource).Advance(TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(2, host.Session.State.Level);
             Assert.AreEqual(

@@ -19,29 +19,29 @@ namespace MindSilence.Tests.EditMode
             Assert.AreEqual(GamePhase.Running, state.Phase);
             Assert.AreEqual(1, state.Level);
             Assert.AreEqual(0, state.ElapsedSecAtLevel);
-            Assert.AreEqual(4, state.RequiredSecAtLevel);
+            Assert.AreEqual(5, state.RequiredSecAtLevel);
         }
 
         [Test]
-        public void FourSecondsOfSilence_AdvancesToLevelTwo()
+        public void FiveSecondsOfSilence_AdvancesToLevelTwo()
         {
             using var session = CreateSession(out var time);
             session.Start();
 
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(2, session.State.Level);
             Assert.AreEqual(0, session.State.ElapsedSecAtLevel);
         }
 
         [Test]
-        public void EightSecondsOnLevelTwo_AdvancesToLevelThree()
+        public void TenSecondsOnLevelTwo_AdvancesToLevelThree()
         {
             using var session = CreateSession(out var time);
             session.Start();
 
-            time.Advance(TimeSpan.FromSeconds(4));
-            time.Advance(TimeSpan.FromSeconds(8));
+            time.Advance(TimeSpan.FromSeconds(5));
+            time.Advance(TimeSpan.FromSeconds(10));
 
             Assert.AreEqual(3, session.State.Level);
         }
@@ -69,7 +69,7 @@ namespace MindSilence.Tests.EditMode
             using var session = CreateSession(out var time, repository);
 
             session.Start();
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
             session.Thought();
             session.DismissSessionSummary();
 
@@ -147,12 +147,12 @@ namespace MindSilence.Tests.EditMode
         {
             using var session = CreateSession(out var time);
             session.Start();
-            time.Advance(TimeSpan.FromSeconds(4));
-            time.Advance(TimeSpan.FromSeconds(8));
+            time.Advance(TimeSpan.FromSeconds(5));
+            time.Advance(TimeSpan.FromSeconds(10));
 
             session.Thought();
 
-            Assert.AreEqual(new SessionSummary(3, 3, 12), session.State.SessionSummary);
+            Assert.AreEqual(new SessionSummary(3, 3, 15), session.State.SessionSummary);
         }
 
         [Test]
@@ -222,7 +222,7 @@ namespace MindSilence.Tests.EditMode
             session.AppForegrounded();
 
             Assert.AreEqual(true, keepAwake[keepAwake.Count - 1]);
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
             Assert.AreEqual(2, session.State.Level);
         }
 
@@ -233,7 +233,7 @@ namespace MindSilence.Tests.EditMode
             session.Start();
 
             session.AppForegrounded();
-            time.Advance(TimeSpan.FromSeconds(4));
+            time.Advance(TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(GamePhase.Running, session.State.Phase);
             Assert.AreEqual(2, session.State.Level);
@@ -250,8 +250,8 @@ namespace MindSilence.Tests.EditMode
         [Test]
         public void RunningProgressFraction_IsElapsedOverRequired()
         {
-            var running = new GameSessionState(GamePhase.Running, level: 1, elapsedSecAtLevel: 2);
-            Assert.AreEqual(4, running.RequiredSecAtLevel);
+            var running = new GameSessionState(GamePhase.Running, level: 2, elapsedSecAtLevel: 5);
+            Assert.AreEqual(10, running.RequiredSecAtLevel);
             Assert.AreEqual(0.5f, running.ProgressFraction, 0.0001f);
         }
 

@@ -138,7 +138,7 @@ class GameViewModel @Inject constructor( // All session rules live here, not in 
             if (current.phase != GamePhase.Running) return@update current // Stale tick after Thought.
 
             val nextElapsed = current.elapsedSecAtLevel + 1 // Count this second.
-            val required = current.requiredSecAtLevel // 4, 8, 16, … for this level.
+            val required = current.requiredSecAtLevel // 5, 10, 15, 30, … for this level.
 
             if (nextElapsed >= required) { // Level complete; no LevelComplete UI.
                 current.copy( // Next level starts immediately.
